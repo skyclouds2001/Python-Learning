@@ -1,3 +1,3 @@
 # Python-Learning
 
-The repository contains codes when learning Python school class in 2021.3 - 2021.6.
+The repository contains codes when learning Python in school classes during 2021.3 and 2021.6.
