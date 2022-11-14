@@ -48,7 +48,7 @@ def get_kk(d: list[int], k: int) -> list[int]:
     return kk
 
 
-def get_mod_reverse(a: int, m: int) -> int | None:
+def get_mod_reverse(a: int, m: int) -> int:
     if gcd(a, m) != 1:
         raise Exception("Invalid Error")
     u1, u2, u3 = 1, 0, a
