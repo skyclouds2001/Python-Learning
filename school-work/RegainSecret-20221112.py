@@ -1,5 +1,5 @@
 import random
-from typing import TextIO
+from typing import IO
 
 
 def gcd(a: int, b: int) -> int:
@@ -16,25 +16,23 @@ def judge_legal_d(m: list[int], num: int) -> bool:
             if i != j and gcd(m[i], m[j]) != 1:
                 flag = False
                 break
-    return flag and (num == 1 or m[num - 2] < m[num - 1])
+    return flag
 
 
 def create_d_array(n: int) -> list[int]:
     d = [1 for _ in range(0, n)]
-    temp = random.randint(pow(10, 167), pow(10, 168))
-    d[0] = temp
+    d[0] = random.randint(pow(10, 167), pow(10, 168))
     i = 1
     while i < n:
-        temp = random.randint(pow(10, 167), pow(10, 168))
-        d[i] = temp
+        d[i] = random.randint(pow(10, 167), pow(10, 168))
         if judge_legal_d(d, i + 1):
             i = i + 1
+    d.sort()
     return d
 
 
 def get_n_and_m(d: list[int], t: int) -> (int, int):
-    n = 1
-    m = 1
+    m, n = 1, 1
     for i in range(0, t):
         n = n * d[i]
     for i in range(len(d) - t + 1, len(d)):
@@ -43,16 +41,16 @@ def get_n_and_m(d: list[int], t: int) -> (int, int):
 
 
 def get_kk(d: list[int], k: int) -> list[int]:
-    k1 = [1 for _ in range(0, len(d))]
+    kk = [1 for _ in range(0, len(d))]
     for i in range(0, len(d)):
-        k1[i] = k % d[i]
-    k1 = k1[0:len(d)]
-    return k1
+        kk[i] = k % d[i]
+    kk = kk[0:len(d)]
+    return kk
 
 
 def get_mod_reverse(a: int, m: int) -> int | None:
     if gcd(a, m) != 1:
-        return None
+        raise Exception("Invalid Error")
     u1, u2, u3 = 1, 0, a
     v1, v2, v3 = 0, 1, m
     while v3 != 0:
@@ -61,21 +59,26 @@ def get_mod_reverse(a: int, m: int) -> int | None:
     return u1 % m
 
 
+def get_product_m(li: list[int]) -> int:
+    res: int = 1
+    for i in li:
+        res *= i
+    return res
+
+
 def chinese_surplus(k: list[int], d: list[int], t: int) -> int:
     m = d[0:t]
     a = k[0:t]
-    m1 = 1
-    for i in range(0, len(m)):
-        m1 = m1 * m[i]
+    M = get_product_m(m)
     Mj = div_result(m)
-    Mj1 = [0 for _ in range(0, len(m))]
+    Mj_i = [0 for _ in range(0, len(m))]
     for i in range(0, len(m)):
-        Mj1[i] = get_mod_reverse(Mj[i], m[i])
+        Mj_i[i] = get_mod_reverse(Mj[i], m[i])
     x = 0
     for i in range(0, len(m)):
-        x = x + Mj[i] * Mj1[i] * a[i]
-    result = x % m1
-    return result
+        x += Mj[i] * Mj_i[i] * a[i]
+    res = x % M
+    return res
 
 
 def div_result(m: list[int]) -> list[int]:
@@ -95,7 +98,7 @@ def main() -> None:
     print("n: ", n)
     print("t: ", t)
 
-    file: TextIO = open("D:\\学习\\3·1信息安全基础与密码学综合实验\\secret1.txt")
+    file: IO = open("D:\\学习\\3·1信息安全基础与密码学综合实验\\secret1.txt")
     key: int = int(file.readline())
     print("key: ", key)
 
@@ -110,7 +113,10 @@ def main() -> None:
     print("keys: ", kk)
 
     res: int = chinese_surplus(kk, d, t)
-    print("recover key with t: ", res)
+    print("recovered key with t keys: ", res)
+
+    res: int = chinese_surplus(kk, d, t - 1)
+    print("recovered key with t - 1 keys: ", res)
 
 
 if __name__ == '__main__':
